@@ -1,8 +1,10 @@
-// src/pages/UserPage.jsx
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
-
+/**
+ * UserPage component for answering questions.
+ * @returns {JSX.Element} Rendered UserPage component.
+ */
 const UserPage = () => {
   const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState('');
@@ -11,47 +13,56 @@ const UserPage = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       const querySnapshot = await getDocs(collection(db, "questions"));
-      setQuestions(querySnapshot.docs.map(doc => doc.data()));
+      setQuestions(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
-    
     fetchQuestions();
   }, []);
+  /**
+   * Handles submission of an answer.
+   * @param {React.FormEvent<HTMLFormElement>} event - Form submission event.
+   */
+  const handleSubmitAnswer = async (event) => {
+    event.preventDefault();
+    if (!selectedQuestion || !answer.trim()) return;
 
-  const handleSubmitAnswer = async (e) => {
-    e.preventDefault();
     try {
       await addDoc(collection(db, "answers"), {
         questionId: selectedQuestion,
         userId: auth.currentUser.uid,
-        answerText: answer
+        answerText: answer.trim()
       });
       setAnswer('');
+      setSelectedQuestion('');
     } catch (error) {
       console.error("Error submitting answer: ", error);
     }
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-4">User Page</h2>
-      <form onSubmit={handleSubmitAnswer} className="flex flex-col mb-4">
+    <div className="user-page">
+      <h2 className="page-title">User Page</h2>
+      <form onSubmit={handleSubmitAnswer} className="answer-form">
         <select
           value={selectedQuestion}
-          onChange={(e) => setSelectedQuestion(e.target.value)}
-          className="border p-2 mb-2"
+          onChange={(event) => setSelectedQuestion(event.target.value)}
+          className="question-select"
+          aria-label="Select a question"
         >
           <option value="">Select a question</option>
-          {questions.map((q, index) => (
-            <option key={index} value={q.id}>{q.questionText}</option>
+          {questions.map((question) => (
+            <option key={question.id} value={question.id}>
+              {question.questionText}
+            </option>
           ))}
         </select>
         <textarea
           value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          className="border p-2 mb-2"
+          onChange={(event) => setAnswer(event.target.value)}
+          className="answer-textarea"
           placeholder="Write your answer"
+          aria-label="Answer input"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2">Submit Answer</button>
+        <button type="submit" className="submit-button">Submit Answer</button>
       </form>
     </div>
   );

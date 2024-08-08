@@ -1,16 +1,28 @@
 import React from 'react';
 
-const QuestionList = ({ questions }) => {
+/**
+ * Component to display a list of nutrition-related questions.
+ *
+ * @param {Object} props - Component properties.
+ * @param {Array<string>} props.questions - Array of nutrition questions.
+ * @returns {JSX.Element} Rendered list of nutrition questions.
+ */
+const NutritionQuestionList = ({ questions }) => {
   return (
-    <div className="m-4">
-      <h2 className="text-xl font-bold mb-2">Questions</h2>
-      <ul>
+    <section className="nutrition-question-section">
+      <h2 className="nutrition-question-heading">Nutrition Questions</h2>
+      <ul className="nutrition-question-list">
         {questions.map((question, index) => (
-          <li key={index} className="border p-2 mb-2">{question}</li>
+          <li
+            key={`nutrition-question-${index}`}
+            className="nutrition-question-item"
+          >
+            {question}
+          </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 };
 
-export default QuestionList;
+export default NutritionQuestionList;

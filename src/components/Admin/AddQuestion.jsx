@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
 
-const AddQuestion = ({ addQuestion }) => {
+/**
+ * Component for adding a nutrition-related question.
+ *
+ * @param {Object} props - Component properties.
+ * @param {Function} props.addQuestion - Function to add a new question.
+ * @returns {JSX.Element} Rendered form for adding a question.
+ */
+const AddNutritionQuestion = ({ addQuestion }) => {
   const [question, setQuestion] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addQuestion(question);
-    setQuestion('');
+  /**
+   * Handles form submission.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event - Form submission event.
+   */
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (question.trim()) {
+      addQuestion(question);
+      setQuestion('');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="m-4">
+    <form onSubmit={handleSubmit} className="nutrition-question-form">
       <input
         type="text"
         value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        className="border p-2 w-full"
-        placeholder="Enter your question"
+        onChange={(event) => setQuestion(event.target.value)}
+        className="nutrition-question-input"
+        placeholder="Enter your nutrition-related question"
+        aria-label="Nutrition question input"
       />
-      <button type="submit" className="mt-2 bg-blue-500 text-white p-2">Add Question</button>
+      <button
+        type="submit"
+        className="nutrition-question-submit"
+      >
+        Add Nutrition Question
+      </button>
     </form>
   );
 };
 
-export default AddQuestion;
+export default AddNutritionQuestion;

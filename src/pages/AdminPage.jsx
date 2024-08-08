@@ -1,10 +1,13 @@
-// src/pages/AdminPage.jsx
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * AdminPage component for managing questions.
+ * @returns {JSX.Element} Rendered AdminPage component.
+ */
 const AdminPage = () => {
   const [question, setQuestion] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -29,12 +32,15 @@ const AdminPage = () => {
       const querySnapshot = await getDocs(collection(db, "questions"));
       setQuestions(querySnapshot.docs.map(doc => doc.data()));
     };
-    
     fetchQuestions();
   }, []);
 
-  const handleAddQuestion = async (e) => {
-    e.preventDefault();
+  /**
+   * Handles adding a new question to the database.
+   * @param {React.FormEvent<HTMLFormElement>} event - Form submission event.
+   */
+  const handleAddQuestion = async (event) => {
+    event.preventDefault();
     try {
       await addDoc(collection(db, "questions"), {
         questionText: question,
@@ -47,23 +53,24 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-4">Admin Page</h2>
-      <form onSubmit={handleAddQuestion} className="flex flex-col mb-4">
+    <div className="admin-page">
+      <h2 className="admin-page-title">Admin Page</h2>
+      <form onSubmit={handleAddQuestion} className="question-form">
         <input
           type="text"
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          className="border p-2 mb-2"
+          onChange={(event) => setQuestion(event.target.value)}
+          className="question-input"
           placeholder="Enter your question"
+          aria-label="Question input"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2">Add Question</button>
+        <button type="submit" className="submit-button">Add Question</button>
       </form>
-      <div>
-        <h3 className="text-lg mb-2">Questions:</h3>
+      <div className="questions-list">
+        <h3 className="questions-list-title">Questions:</h3>
         <ul>
           {questions.map((q, index) => (
-            <li key={index} className="border p-2 mb-2">{q.questionText}</li>
+            <li key={`question-${index}`} className="question-item">{q.questionText}</li>
           ))}
         </ul>
       </div>
