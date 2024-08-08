@@ -30,8 +30,8 @@ const AddNutritionQuestion = ({ addQuestion }) => {
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
         className="nutrition-question-input"
-        placeholder="Enter your nutrition-related question"
-        aria-label="Nutrition question input"
+        placeholder="Enter your question"
+        aria-label="Question input"
       />
       <button
         type="submit"

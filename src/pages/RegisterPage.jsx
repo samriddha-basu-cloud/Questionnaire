@@ -51,8 +51,8 @@ const RegisterPage = () => {
               aria-label="Password input"
             />
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="register-button w-full py-3 rounded-lg bg-blue-500 text-white font-semibold shadow-neumorph-button hover:shadow-neumorph-button-hover active:shadow-neumorph-button-active transition duration-150 ease-in-out"
           >
             Register
